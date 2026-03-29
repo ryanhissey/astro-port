@@ -10,17 +10,21 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://hissey.dev',
   integrations: [mdx(), sitemap()],
+
   redirects: {
     '/blog': '/articles',
     '/blog/[...slug]': '/articles/[...slug]',
   },
+
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport',
   },
+
   experimental: {
     svgo: true,
   },
+
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',
@@ -29,10 +33,8 @@ export default defineConfig({
       },
     },
   },
+
   vite: {
     plugins: [tailwindcss()],
-    build: {
-      cssMinify: 'lightningcss',
-    },
   },
 });
