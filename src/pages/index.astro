@@ -15,11 +15,11 @@ const posts = (await getCollection('blog'))
 	.slice(0, 3);
 
 const workExperience = [
-	{ initials: 'H',  title: 'Magento Developer',    company: 'Hyvä',            dates: 'Jul 2023 — Present'    },
-	{ initials: 'V',  title: 'Magento Developer',    company: 'Vitl',            dates: 'Mar — Jul 2023'        },
-	{ initials: 'EF', title: 'Ecommerce Developer',  company: 'Etika Finance UK', dates: 'Oct 2022 — Mar 2023'  },
-	{ initials: 'AD', title: 'Backend Developer',    company: 'Aware Digital',   dates: 'Mar 2021 — Oct 2022'  },
-	{ initials: 'NB', title: 'Backend Developer',    company: 'Netbiz Group',    dates: 'Dec 2019 — Feb 2021'  },
+	{ title: 'Magento Developer',    company: 'Hyvä',            dates: 'Jul 2023 — Present'   },
+	{ title: 'Magento Developer',    company: 'Vitl',            dates: 'Mar — Jul 2023'       },
+	{ title: 'Ecommerce Developer',  company: 'Etika Finance UK', dates: 'Oct 2022 — Mar 2023' },
+	{ title: 'Backend Developer',    company: 'Aware Digital',   dates: 'Mar 2021 — Oct 2022' },
+	{ title: 'Backend Developer',    company: 'Netbiz Group',    dates: 'Dec 2019 — Feb 2021' },
 ];
 
 const skills = {
@@ -95,11 +95,8 @@ const skills = {
 						Work
 					</div>
 					<ol class="mt-6 space-y-0 divide-y divide-brand-600/40">
-						{workExperience.map(({ initials, title, company, dates }) => (
+						{workExperience.map(({ title, company, dates }) => (
 							<li class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
-								<div class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-brand-600/60 ring-1 ring-brand-500/30 text-xs font-bold text-brand-200">
-									{initials}
-								</div>
 								<div class="flex flex-1 items-center justify-between gap-2">
 									<div>
 										<p class="text-sm font-medium text-brand-50">{title}</p>
