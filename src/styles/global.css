@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-50: #D1D4F0;
+  --color-brand-100: #B2B8E6;
+  --color-brand-200: #848DD7;
+  --color-brand-300: #6571CD;
+  --color-brand-400: #3C4BB9;
+  --color-brand-500: #28327B;
+  --color-brand-600: #191F4D;
+  --color-brand-700: #111534;
+  --color-brand-800: #0B0F24;
+}
+
+/* Background grid pattern */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-brand-100) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-brand-100) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Waving hand animation */
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-8deg); }
+  40% { transform: rotate(14deg); }
+  50% { transform: rotate(-4deg); }
+  60% { transform: rotate(10deg); }
+  70% { transform: rotate(0deg); }
+}
+
+.animate-wave {
+  animation: wave 2.5s ease-in-out infinite;
+}
+
+/* Typewriter animation */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: var(--color-brand-200); }
+}
+
+.animate-typewriter {
+  width: 0;
+  animation:
+    typewriter 1.2s steps(12) 0.5s forwards,
+    blink-caret 0.75s step-end infinite;
+}
+
+/* Background glow blobs */
+.bg-glow-primary {
+  background: linear-gradient(135deg, #6571CD 0%, #9F7AEA 40%, #3C4BB9 100%);
+}
+
+.bg-glow-secondary {
+  background: linear-gradient(160deg, #3C4BB9 0%, #5B8DEF 50%, #848DD7 100%);
+}
+
+.bg-glow-accent {
+  background: linear-gradient(180deg, #848DD7 0%, #A855F7 50%, #6571CD 100%);
+}
+
+.bg-glow-highlight {
+  background: radial-gradient(circle, #9F7AEA, transparent 70%);
+}
+
+/* Base styles for dark-only theme */
+body {
+  background-color: var(--color-brand-800);
+  color: var(--color-brand-50);
+}
+
+/* Prose overrides for dark background */
+.prose {
+  --tw-prose-body: var(--color-brand-50);
+  --tw-prose-headings: #fff;
+  --tw-prose-links: var(--color-brand-200);
+  --tw-prose-bold: #fff;
+  --tw-prose-counters: var(--color-brand-100);
+  --tw-prose-bullets: var(--color-brand-300);
+  --tw-prose-hr: var(--color-brand-600);
+  --tw-prose-quotes: var(--color-brand-50);
+  --tw-prose-quote-borders: var(--color-brand-400);
+  --tw-prose-captions: var(--color-brand-100);
+  --tw-prose-code: #fff;
+  --tw-prose-pre-code: var(--color-brand-50);
+  --tw-prose-pre-bg: var(--color-brand-700);
+  --tw-prose-th-borders: var(--color-brand-500);
+  --tw-prose-td-borders: var(--color-brand-600);
+}

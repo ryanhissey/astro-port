@@ -1,0 +1,152 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Badge from '../components/Badge.astro';
+import SocialLink from '../components/SocialLink.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, GITHUB_URL, SITE_EMAIL, CV_URL } from '../consts';
+
+import avatarImage from '../assets/me.webp';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+
+const workExperience = [
+	{ initials: 'H',  title: 'Magento Developer',    company: 'Hyvä',            dates: 'Jul 2023 — Present'    },
+	{ initials: 'V',  title: 'Magento Developer',    company: 'Vitl',            dates: 'Mar — Jul 2023'        },
+	{ initials: 'EF', title: 'Ecommerce Developer',  company: 'Etika Finance UK', dates: 'Oct 2022 — Mar 2023'  },
+	{ initials: 'AD', title: 'Backend Developer',    company: 'Aware Digital',   dates: 'Mar 2021 — Oct 2022'  },
+	{ initials: 'NB', title: 'Backend Developer',    company: 'Netbiz Group',    dates: 'Dec 2019 — Feb 2021'  },
+];
+
+const skills = {
+	advanced:     ['PHP', 'Magento 2', 'Laravel', 'SQL', 'JavaScript', 'AlpineJS'],
+	intermediate: ['Frontend', 'TypeScript'],
+};
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<!-- Hero -->
+	<Container class="pt-16 pb-10 sm:pt-24">
+		<div class="flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-between md:gap-12">
+			<div class="order-2 max-w-2xl flex-1 text-center md:order-1 md:text-left">
+				<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+					Backend software engineer, Magento specialist, and ecommerce developer.
+				</h1>
+				<p class="mt-6 text-base text-brand-100/80">
+					{SITE_DESCRIPTION}
+				</p>
+				<div class="mt-6 flex justify-center gap-5 md:justify-start">
+					<SocialLink href={GITHUB_URL} label="Follow on GitHub">
+						<svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 fill-brand-100/60 transition group-hover:fill-brand-50">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .269.188.589.688.487a10.036 10.036 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z" />
+						</svg>
+					</SocialLink>
+					<SocialLink href={`mailto:${SITE_EMAIL}`} label="Send email">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="h-6 w-6 stroke-brand-100/60 transition group-hover:stroke-brand-50">
+							<path d="M2.75 7.75a3 3 0 0 1 3-3h12.5a3 3 0 0 1 3 3v8.5a3 3 0 0 1-3 3H5.75a3 3 0 0 1-3-3v-8.5Z" />
+							<path d="m4 6 6.024 5.479a2.915 2.915 0 0 0 3.952 0L20 6" />
+						</svg>
+					</SocialLink>
+				</div>
+			</div>
+			<div class="relative order-1 flex-shrink-0 md:order-2">
+				<Image
+					src={avatarImage}
+					alt="Ryan Hissey"
+					width={350}
+					height={350}
+					loading="eager"
+					fetchpriority="high"
+					class="aspect-square w-48 rotate-3 rounded-2xl object-cover shadow-xl shadow-brand-800/50 ring-1 ring-brand-500/20 sm:w-56 md:w-64 lg:w-72"
+				/>
+				<span class="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-full bg-brand-600 ring-1 ring-brand-500 py-2 pl-3 pr-4" aria-hidden="true">
+					<span class="text-xl animate-wave origin-[70%_70%]">👋</span>
+					<span class="text-sm font-medium text-brand-50 animate-typewriter overflow-hidden whitespace-nowrap border-r-2 border-brand-200">Hello there!</span>
+				</span>
+			</div>
+		</div>
+	</Container>
+
+	<!-- Articles & Work -->
+	<Container class="mt-16 sm:mt-24">
+		<div class="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:gap-x-16">
+			<div class="flex flex-col gap-y-10">
+				{posts.map((post) => (
+					<ArticleCard
+						title={post.data.title}
+						date={post.data.pubDate}
+						description={post.data.description}
+						slug={post.id}
+					/>
+				))}
+			</div>
+
+			<div class="flex flex-col gap-y-8 self-start lg:sticky lg:top-24">
+				<!-- Work Experience -->
+				<div class="rounded-2xl border border-brand-600/50 bg-brand-700/50 backdrop-blur-sm p-6">
+					<div class="flex items-center gap-3 text-sm font-semibold text-brand-50">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" class="h-6 w-6 stroke-brand-200">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+						</svg>
+						Work
+					</div>
+					<ol class="mt-6 space-y-0 divide-y divide-brand-600/40">
+						{workExperience.map(({ initials, title, company, dates }) => (
+							<li class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+								<div class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-brand-600/60 ring-1 ring-brand-500/30 text-xs font-bold text-brand-200">
+									{initials}
+								</div>
+								<div class="flex flex-1 items-center justify-between gap-2">
+									<div>
+										<p class="text-sm font-medium text-brand-50">{title}</p>
+										<p class="text-xs text-brand-100/60">{company}</p>
+									</div>
+									<p class="whitespace-nowrap text-xs text-brand-100/40">{dates}</p>
+								</div>
+							</li>
+						))}
+					</ol>
+					<a
+						href={CV_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-brand-50 ring-1 ring-brand-500/50 transition hover:bg-brand-500 hover:ring-brand-400/50"
+					>
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+						</svg>
+						View full CV
+					</a>
+				</div>
+
+				<!-- Skills -->
+				<div class="rounded-2xl border border-brand-600/50 bg-brand-700/50 backdrop-blur-sm p-6">
+					<div class="flex items-center gap-3 text-sm font-semibold text-brand-50">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" class="h-6 w-6 stroke-brand-200">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+						</svg>
+						Skills
+					</div>
+					<div class="mt-6 space-y-5">
+						<div>
+							<p class="text-xs font-medium uppercase tracking-wider text-brand-100/50">Advanced</p>
+							<div class="mt-2 flex flex-wrap gap-2">
+								{skills.advanced.map((skill) => <Badge size="sm">{skill}</Badge>)}
+							</div>
+						</div>
+						<div>
+							<p class="text-xs font-medium uppercase tracking-wider text-brand-100/50">Intermediate</p>
+							<div class="mt-2 flex flex-wrap gap-2">
+								{skills.intermediate.map((skill) => <Badge size="sm">{skill}</Badge>)}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</Container>
+</BaseLayout>

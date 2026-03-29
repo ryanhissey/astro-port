@@ -1,0 +1,124 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import { GITHUB_URL, SITE_EMAIL } from '../consts';
+
+const navLinks = [
+	{ href: '/', label: 'Home' },
+	{ href: '/about', label: 'About' },
+	{ href: '/articles', label: 'Articles' },
+	{ href: '/projects', label: 'Projects' },
+];
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="fixed top-0 z-50 w-full border-b border-brand-600/50 bg-brand-800/80 backdrop-blur-md">
+	<nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+		<a href="/" class="text-2xl font-bold tracking-tight text-white transition hover:text-brand-200">
+			hissey.dev
+		</a>
+
+		<div class="hidden items-center gap-6 sm:flex">
+			{navLinks.map(({ href, label }) => (
+				<HeaderLink href={href}>{label}</HeaderLink>
+			))}
+			<a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="text-brand-50/70 transition hover:text-brand-50">
+				<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5 fill-current">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .269.188.589.688.487a10.036 10.036 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z" />
+				</svg>
+			</a>
+		</div>
+
+		<!-- Mobile menu button -->
+		<button
+			id="mobile-menu-btn"
+			class="relative z-50 rounded-md p-2 text-brand-100 sm:hidden"
+			aria-label="Toggle menu"
+		>
+			<!-- Hamburger icon -->
+			<svg id="icon-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+			</svg>
+			<!-- Close icon -->
+			<svg id="icon-close" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+			</svg>
+		</button>
+	</nav>
+</header>
+
+<!-- Mobile overlay -->
+<div id="mobile-overlay" class="pointer-events-none fixed inset-0 z-40 bg-brand-800/80 opacity-0 backdrop-blur-sm transition-opacity duration-300 sm:hidden"></div>
+
+<!-- Mobile slide-out panel -->
+<div id="mobile-panel" class="fixed top-0 right-0 z-40 h-full w-72 translate-x-full bg-brand-700 shadow-2xl shadow-black/50 transition-transform duration-300 ease-in-out sm:hidden">
+	<div class="flex flex-col pt-20 px-6">
+		<nav class="flex flex-col gap-1">
+			{navLinks.map(({ href, label }) => {
+				const isActive = href === pathname || (href !== '/' && pathname.startsWith(href));
+				return (
+					<a
+						href={href}
+						class:list={[
+							'rounded-lg px-4 py-3 text-base font-medium transition hover:bg-brand-600/50',
+							isActive ? 'text-brand-50' : 'text-brand-50/80 hover:text-brand-50',
+						]}
+					>
+						{label}
+					</a>
+				);
+			})}
+		</nav>
+
+		<div class="mt-8 border-t border-brand-600/50 pt-6">
+			<div class="flex flex-col gap-3 px-4">
+				<a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-sm text-brand-100/60 transition hover:text-brand-50">
+					<svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5 fill-current">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .269.188.589.688.487a10.036 10.036 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z" />
+					</svg>
+					GitHub
+				</a>
+				<a href={`mailto:${SITE_EMAIL}`} class="flex items-center gap-3 text-sm text-brand-100/60 transition hover:text-brand-50">
+					<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="h-5 w-5 stroke-current">
+						<path d="M2.75 7.75a3 3 0 0 1 3-3h12.5a3 3 0 0 1 3 3v8.5a3 3 0 0 1-3 3H5.75a3 3 0 0 1-3-3v-8.5Z" />
+						<path d="m4 6 6.024 5.479a2.915 2.915 0 0 0 3.952 0L20 6" />
+					</svg>
+					{SITE_EMAIL}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const btn = document.getElementById('mobile-menu-btn');
+	const overlay = document.getElementById('mobile-overlay');
+	const panel = document.getElementById('mobile-panel');
+	const iconOpen = document.getElementById('icon-open');
+	const iconClose = document.getElementById('icon-close');
+
+	function openMenu() {
+		panel?.classList.remove('translate-x-full');
+		overlay?.classList.remove('pointer-events-none', 'opacity-0');
+		overlay?.classList.add('pointer-events-auto', 'opacity-100');
+		iconOpen?.classList.add('hidden');
+		iconClose?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function closeMenu() {
+		panel?.classList.add('translate-x-full');
+		overlay?.classList.add('pointer-events-none', 'opacity-0');
+		overlay?.classList.remove('pointer-events-auto', 'opacity-100');
+		iconOpen?.classList.remove('hidden');
+		iconClose?.classList.add('hidden');
+		document.body.style.overflow = '';
+	}
+
+	btn?.addEventListener('click', () => {
+		const isOpen = !panel?.classList.contains('translate-x-full');
+		isOpen ? closeMenu() : openMenu();
+	});
+
+	overlay?.addEventListener('click', closeMenu);
+</script>
