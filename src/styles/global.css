@@ -15,14 +15,6 @@
   --color-brand-800: #0B0F24;
 }
 
-/* Background grid pattern */
-.bg-grid {
-  background-image:
-    linear-gradient(var(--color-brand-100) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-brand-100) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
 /* Waving hand animation */
 @keyframes wave {
   0%, 100% { transform: rotate(0deg); }
@@ -56,21 +48,37 @@
     blink-caret 0.75s step-end infinite;
 }
 
-/* Background glow blobs */
+/* Background nebula haze */
 .bg-glow-primary {
-  background: linear-gradient(135deg, #6571CD 0%, #9F7AEA 40%, #3C4BB9 100%);
+  background: radial-gradient(ellipse at 30% 30%, #6571CD 0%, #3C4BB9 45%, transparent 75%);
 }
 
 .bg-glow-secondary {
-  background: linear-gradient(160deg, #3C4BB9 0%, #5B8DEF 50%, #848DD7 100%);
+  background: radial-gradient(ellipse at 60% 40%, #5B8DEF 0%, #3C4BB9 50%, transparent 75%);
 }
 
 .bg-glow-accent {
-  background: linear-gradient(180deg, #848DD7 0%, #A855F7 50%, #6571CD 100%);
+  background: radial-gradient(circle, #A855F7 0%, #6571CD 50%, transparent 72%);
 }
 
 .bg-glow-highlight {
   background: radial-gradient(circle, #9F7AEA, transparent 70%);
+}
+
+@keyframes nebula-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(2.5%, -2%, 0) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-nebula   { animation: nebula-drift 80s ease-in-out infinite alternate; }
+  .animate-nebula-2 { animation: nebula-drift 110s ease-in-out -30s infinite alternate-reverse; }
+}
+
+/* Film grain — tiled SVG feTurbulence noise */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
 }
 
 /* Base styles for dark-only theme */

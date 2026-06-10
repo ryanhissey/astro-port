@@ -1,0 +1,126 @@
+<canvas id="starfield" class="absolute inset-0 h-full w-full"></canvas>
+
+<script>
+	interface Star {
+		x: number;
+		y: number;
+		z: number;
+		r: number;
+		a: number;
+		color: string;
+		twinkles: boolean;
+		phase: number;
+		speed: number;
+	}
+
+	const canvas = document.getElementById('starfield') as HTMLCanvasElement | null;
+	const ctx = canvas?.getContext('2d');
+
+	if (canvas && ctx) {
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		let stars: Star[] = [];
+		let width = 0;
+		let height = 0;
+		let rafId = 0;
+		let last = 0;
+
+		function pickColor(): string {
+			const roll = Math.random();
+			if (roll < 0.8) return '209, 212, 240';
+			if (roll < 0.92) return '178, 184, 230';
+			return '232, 220, 200';
+		}
+
+		function makeStars(): void {
+			const count = Math.min(Math.round((width * height) / 4500), 400);
+			stars = Array.from({ length: count }, () => {
+				const z = 0.25 + Math.random() * 0.75;
+				return {
+					x: Math.random() * width,
+					y: Math.random() * height,
+					z,
+					r: (0.4 + Math.random() * 0.9) * z,
+					a: 0.25 + z * 0.55,
+					color: pickColor(),
+					twinkles: Math.random() < 0.3,
+					phase: Math.random() * Math.PI * 2,
+					speed: 0.3 + Math.random() * 0.8,
+				};
+			});
+		}
+
+		function resize(): void {
+			const dpr = Math.min(window.devicePixelRatio || 1, 2);
+			width = window.innerWidth;
+			height = window.innerHeight;
+			canvas!.width = width * dpr;
+			canvas!.height = height * dpr;
+			ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+			makeStars();
+		}
+
+		function draw(now: number, dt: number): void {
+			ctx!.clearRect(0, 0, width, height);
+			for (const star of stars) {
+				star.x = (star.x - 4 * star.z * dt + width) % width;
+				star.y = (star.y + 1.5 * star.z * dt + height) % height;
+				const alpha = star.twinkles
+					? star.a * (0.65 + 0.35 * Math.sin((now / 1000) * star.speed + star.phase))
+					: star.a;
+				ctx!.beginPath();
+				ctx!.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+				ctx!.fillStyle = `rgba(${star.color}, ${alpha})`;
+				ctx!.fill();
+			}
+		}
+
+		function frame(now: number): void {
+			const dt = Math.min((now - last) / 1000, 0.1);
+			last = now;
+			draw(now, dt);
+			rafId = requestAnimationFrame(frame);
+		}
+
+		function start(): void {
+			if (rafId) return;
+			last = performance.now();
+			rafId = requestAnimationFrame(frame);
+		}
+
+		function stop(): void {
+			cancelAnimationFrame(rafId);
+			rafId = 0;
+		}
+
+		function render(): void {
+			if (reducedMotion.matches) {
+				stop();
+				draw(performance.now(), 0);
+			} else {
+				start();
+			}
+		}
+
+		let resizeTimer = 0;
+		window.addEventListener('resize', () => {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(() => {
+				resize();
+				render();
+			}, 150);
+		});
+
+		document.addEventListener('visibilitychange', () => {
+			if (document.hidden) {
+				stop();
+			} else {
+				render();
+			}
+		});
+
+		reducedMotion.addEventListener('change', render);
+
+		resize();
+		render();
+	}
+</script>

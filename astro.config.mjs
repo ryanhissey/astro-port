@@ -2,7 +2,7 @@
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
+import { defineConfig, svgoOptimizer } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
@@ -22,7 +22,7 @@ export default defineConfig({
   },
 
   experimental: {
-    svgo: true,
+    svgOptimizer: svgoOptimizer(),
   },
 
   image: {
