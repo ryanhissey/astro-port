@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { SITE_TITLE, SERVICES, SECONDARY_SERVICES, HIRE_MAILTO, CERTIFICATIONS } from '../consts';
+import CertBadge from '../components/CertBadge.astro';
+---
+
+<BaseLayout
+	title={`Magento 2 Development Services - ${SITE_TITLE}`}
+	description="Magento 2 & Hyvä development help: custom modules, Hyvä Checkout integrations, Hyvä theme work, Luma to Hyvä module migration, and maintenance."
+>
+	<Container class="pt-16 sm:pt-24">
+		<div class="max-w-2xl">
+			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+				Magento 2 development help.
+			</h1>
+			<p class="mt-6 text-base text-brand-100/80">
+				Whether it's a stubborn bug, a custom module, or Hyvä theme work, I can help.
+				I build Hyvä's core products as my day job, and I'm Hyvä and Adobe Commerce certified.
+			</p>
+			<div class="mt-6 flex flex-wrap gap-2">
+				{CERTIFICATIONS.map((cert) => <CertBadge name={cert.name} url={cert.url} />)}
+			</div>
+		</div>
+
+		<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			{SERVICES.map((service) => (
+				<ServiceCard title={service.title} description={service.description} />
+			))}
+		</div>
+
+		<div class="mt-16 border-t border-brand-600/40 pt-12">
+			<div class="max-w-2xl">
+				<h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Beyond Magento</h2>
+				<p class="mt-3 text-base text-brand-100/80">
+					Magento is my specialism, but I'm a PHP backend developer at heart. I also take on
+					general PHP and Laravel work.
+				</p>
+			</div>
+			<div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{SECONDARY_SERVICES.map((service) => (
+					<ServiceCard title={service.title} description={service.description} />
+				))}
+			</div>
+		</div>
+
+		<div class="mt-16 rounded-2xl border border-brand-600/50 bg-brand-700/50 p-8 text-center">
+			<h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+				Got a project in mind?
+			</h2>
+			<p class="mx-auto mt-3 max-w-xl text-base text-brand-100/80">
+				Tell me what you're working on and I'll let you know how I can help.
+			</p>
+			<a
+				href={HIRE_MAILTO}
+				class="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-medium text-brand-50 ring-1 ring-brand-500/50 transition hover:bg-brand-500 hover:ring-brand-400/50"
+			>
+				<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="h-4 w-4">
+					<path d="M2.75 7.75a3 3 0 0 1 3-3h12.5a3 3 0 0 1 3 3v8.5a3 3 0 0 1-3 3H5.75a3 3 0 0 1-3-3v-8.5Z" />
+					<path d="m4 6 6.024 5.479a2.915 2.915 0 0 0 3.952 0L20 6" />
+				</svg>
+				Get in touch
+			</a>
+		</div>
+	</Container>
+</BaseLayout>

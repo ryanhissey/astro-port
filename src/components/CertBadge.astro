@@ -1,0 +1,21 @@
+---
+interface Props {
+	name: string;
+	url: string;
+}
+
+const { name, url } = Astro.props;
+---
+
+<a
+	href={url}
+	target="_blank"
+	rel="noopener noreferrer"
+	aria-label={`Verify ${name} certification`}
+	class="group inline-flex items-center gap-1.5 rounded-full bg-brand-600/60 px-2.5 py-0.5 text-xs font-medium text-brand-100 ring-1 ring-brand-500/30 transition hover:bg-brand-600 hover:text-brand-50 hover:ring-brand-400/50"
+>
+	{name}
+	<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="h-3 w-3 text-brand-200/70 transition group-hover:text-brand-100">
+		<path d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+	</svg>
+</a>

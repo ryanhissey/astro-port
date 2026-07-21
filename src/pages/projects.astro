@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/Container.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, HIRE_MAILTO } from '../consts';
 
 const projects = await getCollection('projects');
 ---
@@ -15,7 +15,8 @@ const projects = await getCollection('projects');
 				Things I've built.
 			</h1>
 			<p class="mt-6 text-base text-brand-100/80">
-				Ready to take a sneak peek at my work? Go ahead and explore my portfolio.
+				Open-source modules and side projects, mostly Magento 2 and PHP. Need something similar
+				built for your store? <a href={HIRE_MAILTO} class="font-medium text-brand-200 underline decoration-brand-500/40 underline-offset-4 transition hover:text-brand-100">Get in touch</a>.
 			</p>
 		</div>
 		<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

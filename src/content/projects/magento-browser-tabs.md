@@ -1,6 +1,6 @@
 ---
 title: 'Magento 2 Browser Tab Messages'
-description: 'Provides a quick way to enable messages to be displayed to your customers through their inactive tabs. For example "We miss you!" with a custom timeout.'
+description: 'Open-source Magento 2 module that re-engages customers who tab away. Swaps the browser tab title to a custom message (e.g. "We miss you!") after a configurable timeout, then restores it on return. Zero-config install via Composer, admin-configurable, no frontend dependencies.'
 url: 'https://packagist.org/packages/hissey/module-browser-tabs'
 tags:
   - Magento

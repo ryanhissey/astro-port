@@ -11,11 +11,6 @@ export default defineConfig({
   site: 'https://hissey.dev',
   integrations: [mdx(), sitemap()],
 
-  redirects: {
-    '/blog': '/articles',
-    '/blog/[...slug]': '/articles/[...slug]',
-  },
-
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport',
