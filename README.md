@@ -59,3 +59,7 @@ Frontmatter only gives a card on `/projects/` that links out to `url`. Add a bod
 ## Deployment
 
 Every push to `main` builds and deploys the site to GitHub Pages using [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) (`withastro/action`). It can also be run manually from the Actions tab.
+
+## Credits
+
+Favicon is the 👋 waving hand from [Twemoji](https://github.com/twitter/twemoji) (v14.0.2), © Twitter, Inc and other contributors, licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/). Generated with [favicon.io](https://favicon.io).
