@@ -25,7 +25,9 @@ const projects = await getCollection('projects');
 					title={project.data.title}
 					description={project.data.description}
 					url={project.data.url}
+					href={project.body?.trim() ? `/projects/${project.id}` : undefined}
 					tags={project.data.tags}
+					screenshot={project.data.screenshot}
 				/>
 			))}
 		</div>

@@ -1,0 +1,89 @@
+---
+title: 'Pizza Bebbo'
+description: 'Online ordering for a Northumberland pizza trailer serving Neapolitan-style pizza. Customers book ten-minute collection slots against a fixed pizza capacity, with walk-up allowance held back per slot and released automatically at cutoff. Filament admin for trading nights, a live evening timeline, phone orders and a printable run sheet.'
+url: 'https://pizzabebbo.co.uk'
+tags:
+  - Laravel
+  - Livewire
+  - Filament
+  - Tailwind
+screenshot: '../../assets/projects/pizzabebbo-home.png'
+---
+
+import { Image } from 'astro:assets';
+import slotPicker from '../../assets/projects/pizzabebbo/slot-picker.png';
+import timeline from '../../assets/projects/pizzabebbo/timeline.png';
+import runSheet from '../../assets/projects/pizzabebbo/run-sheet.png';
+
+## The problem
+
+Pizza Bebbo is a husband-and-wife team making Neapolitan-style pizza to order in a trailer. They trade at Longhoughton Community Centre in Northumberland every other Friday, collection only, cards and cash.
+
+Every pizza is made to order, so the queue moves at the speed of the ovens. One large order holds up everyone behind it, and people turning up later in the evening can face a long wait.
+
+The thing that took a while to say out loud: **the limit isn't demand, it's how many pizzas the ovens can turn out in ten minutes.** Online ordering doesn't add capacity. It decides in advance who gets the capacity that's already there, and takes those people out of the queue.
+
+## Why not off the shelf?
+
+Square Online, Slerp, Flipdish and the rest all offer pickup time slots. None of them combine:
+
+- a cap on **pizzas** per slot, not orders,
+- a share of every slot held back for people who just turn up, and
+- that held-back share going back on sale automatically once online ordering closes.
+
+That combination is the whole product, so it was worth building.
+
+## Booking a slot
+
+<div class="not-prose my-10 grid grid-cols-1 items-center gap-8 sm:grid-cols-5">
+	<figure class="sm:col-span-2">
+		<Image src={slotPicker} alt="Pizza Bebbo slot picker on a phone, showing ten-minute slots with pizzas left in each" width={390} class="mx-auto w-full max-w-[260px] rounded-2xl ring-1 ring-brand-500/30" />
+	</figure>
+	<div class="space-y-4 text-base text-brand-50 sm:col-span-3">
+		<p>Customers pick a date, then a ten-minute slot. Full slots stay on screen, greyed out, rather than disappearing, so people can see the night is genuinely busy.</p>
+		<p>The rest is a short basket, contact details and a confirm step. No account needed. Almost everyone orders on their phone, so the whole thing was built mobile first.</p>
+		<p>Online orders have a per-order pizza limit, with a message to phone for bigger ones, so a single order can't swallow a slot.</p>
+	</div>
+</div>
+
+## The capacity engine
+
+This is the bit that matters, and all of it lives in one service class. Nothing else in the app is allowed to make its own decisions about capacity.
+
+**Slots, not a recurring schedule.** They trade every other Friday, give or take, so rather than a recurring rule, trading nights are published one date at a time. Each night has its own times, slot length and capacity. Its slots are saved as real rows, so staff can close or reopen any one of them.
+
+**Walk-ups are held back.** Each slot sells a set number of pizzas online and keeps the rest back for the counter, so nobody gets turned away for not having booked. Online ordering closes five hours before opening so the dough can be made to match.
+
+**Releasing the walk-up allowance needs no scheduled job.** Before cutoff, the counter gets whatever the slot holds back. After cutoff, it gets everything online customers didn't book. Online can't book after cutoff anyway, so unsold pizzas go back to the counter automatically. There's a test pinning that rule down, because it looks like an accident and someone will try to "fix" it.
+
+**Two people, one pizza left.** Checkout runs in a transaction that takes a `lockForUpdate()` on the slot row and checks availability again inside the lock before writing the order. At this volume the race is rare, but when it happens it overbooks without anyone noticing. That's also why the tests run against MySQL rather than SQLite: SQLite compiles the lock away, so the one test that matters would pass for the wrong reason.
+
+**Staff can override.** Phone orders placed from the admin ignore the online cap, the cutoff and the per-order limit. They can even go over a slot's full capacity behind an explicit confirmation. Staff know their own kitchen, and blocking them would be worse than trusting them.
+
+## The admin
+
+The admin is built with Filament. Most of it is standard resources (menu items, categories, allergens, orders), plus two custom pages that run the night.
+
+<figure>
+	<Image src={timeline} alt="Evening timeline in the Filament admin, listing each ten-minute slot with orders, online and walk-up remaining" width={1020} />
+	<figcaption>The evening timeline. Every slot, who's booked into it, what's left online and at the counter, and one click to stop orders for a slot.</figcaption>
+</figure>
+
+The timeline shows, while service is running, where the gaps are for a late walk-up. Phone orders are entered from the same place, with capacity warnings shown inline while the basket is being built rather than on submit.
+
+<figure>
+	<Image src={runSheet} alt="Printable A4 run sheet listing orders grouped by collection time, with a prep breakdown by pizza type" width={1020} />
+	<figcaption>The run sheet, designed to be printed in black and white and read in a trailer.</figcaption>
+</figure>
+
+The run sheet is a printed sheet saying what to make and when. Orders are grouped by slot with a running pizza total, and at the top is a breakdown by pizza type, so they know how much of each topping to prep before leaving for the night.
+
+## Stack
+
+- **Laravel 13** on PHP 8.4
+- **Livewire 4** and Blade for the ordering flow, so it's one language and one deploy
+- **Filament 5** for the admin
+- **Tailwind CSS v4**
+- **MySQL**, for both the app and the tests
+- **Pest** feature tests covering cutoff boundaries, walk-up release, admin overrides, order amendments and checkout on the last pizza
+- **Mailgun** for order confirmation emails
