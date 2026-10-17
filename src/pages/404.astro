@@ -4,7 +4,7 @@ import Container from '../components/Container.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<BaseLayout title={`Page not found - ${SITE_TITLE}`} description="This page drifted off into space.">
+<BaseLayout title={`Page not found - ${SITE_TITLE}`} description="This page drifted off into space." noindex>
 	<Container class="flex flex-col items-center py-24 text-center sm:py-32">
 		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true" class="h-32 w-32 text-brand-200/60">
 			<circle cx="12" cy="12" r="5.5" />

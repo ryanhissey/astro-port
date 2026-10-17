@@ -4,17 +4,40 @@
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/og-default.png';
-import { SITE_TITLE } from '../consts';
+import AvatarImage from '../assets/me.webp';
+import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL, LINKEDIN_URL, CERTIFICATIONS } from '../consts';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, noindex = false } = Astro.props;
+
+// schema.org Person, so search engines can tie the site to Ryan's other profiles
+const personSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	'@id': new URL('/#person', Astro.site).href,
+	name: SITE_TITLE,
+	url: new URL('/', Astro.site).href,
+	image: new URL(AvatarImage.src, Astro.site).href,
+	jobTitle: 'Backend Software Engineer',
+	description: SITE_DESCRIPTION,
+	worksFor: { '@type': 'Organization', name: 'Hyvä', url: 'https://www.hyva.io' },
+	address: { '@type': 'PostalAddress', addressRegion: 'Staffordshire', addressCountry: 'GB' },
+	knowsAbout: ['PHP', 'Magento 2', 'Hyvä', 'Adobe Commerce', 'Laravel', 'Ecommerce'],
+	hasCredential: CERTIFICATIONS.map((cert) => ({
+		'@type': 'EducationalOccupationalCredential',
+		name: cert.name,
+		url: cert.url,
+	})),
+	sameAs: [GITHUB_URL, LINKEDIN_URL],
+};
 ---
 
 <!-- Global Metadata -->
@@ -34,6 +57,7 @@ const { title, description, image = FallbackImage } = Astro.props;
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
@@ -45,9 +69,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="og:image:height" content={String(image.height)} />
 <meta property="og:site_name" content={SITE_TITLE} />
 
+<!-- Structured data -->
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image.src, Astro.url)} />

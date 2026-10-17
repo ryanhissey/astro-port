@@ -11,9 +11,11 @@ interface Props {
 	href?: string;
 	tags?: string[];
 	screenshot?: ImageMetadata;
+	/** Card is in the first row: load its screenshot eagerly as a likely LCP element. */
+	priority?: boolean;
 }
 
-const { title, description, url, href, tags = [], screenshot } = Astro.props;
+const { title, description, url, href, tags = [], screenshot, priority = false } = Astro.props;
 const linkHostname = url ? new URL(url).hostname.replace(/^www\./, '') : null;
 ---
 
@@ -22,7 +24,10 @@ const linkHostname = url ? new URL(url).hostname.replace(/^www\./, '') : null;
 		<Image
 			src={screenshot}
 			alt={`${title} screenshot`}
-			width={640}
+			widths={[400, 640, 800]}
+			sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+			loading={priority ? 'eager' : 'lazy'}
+			fetchpriority={priority ? 'high' : 'auto'}
 			class="mb-5 aspect-[16/10] w-full rounded-xl object-cover object-top ring-1 ring-brand-500/30"
 		/>
 	)}
@@ -32,7 +37,7 @@ const linkHostname = url ? new URL(url).hostname.replace(/^www\./, '') : null;
 				<path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
 			</svg>
 		</div>
-		<h3 class="text-base font-semibold text-brand-50">
+		<h2 class="text-base font-semibold text-brand-50">
 			{href ? (
 				<a href={href}>
 					<span class="absolute -inset-x-4 -inset-y-4 z-10 sm:-inset-x-6 sm:-inset-y-6"></span>
@@ -46,7 +51,7 @@ const linkHostname = url ? new URL(url).hostname.replace(/^www\./, '') : null;
 			) : (
 				title
 			)}
-		</h3>
+		</h2>
 	</div>
 	<p class="mt-3 text-sm text-brand-100/70 line-clamp-3">
 		{description}

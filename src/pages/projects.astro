@@ -8,7 +8,7 @@ import { SITE_TITLE, HIRE_MAILTO } from '../consts';
 const projects = await getCollection('projects');
 ---
 
-<BaseLayout title={`Projects - ${SITE_TITLE}`} description="Things I've built.">
+<BaseLayout title={`Projects - ${SITE_TITLE}`} description="Projects by Ryan Hissey: open-source Magento 2 modules and client builds in Laravel, including the Pizza Bebbo online ordering system.">
 	<Container class="pt-16 sm:pt-24">
 		<div class="max-w-2xl">
 			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">
@@ -20,14 +20,15 @@ const projects = await getCollection('projects');
 			</p>
 		</div>
 		<div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-			{projects.map((project) => (
+			{projects.map((project, index) => (
 				<ProjectCard
 					title={project.data.title}
 					description={project.data.description}
 					url={project.data.url}
-					href={project.body?.trim() ? `/projects/${project.id}` : undefined}
+					href={project.body?.trim() ? `/projects/${project.id}/` : undefined}
 					tags={project.data.tags}
 					screenshot={project.data.screenshot}
+					priority={index === 0}
 				/>
 			))}
 		</div>
